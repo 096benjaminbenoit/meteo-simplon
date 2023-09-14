@@ -10,7 +10,7 @@ export default function Hero() {
           proposent des formations gratuites aux métiers techniques du numérique
           en France et à l&apos;étranger.
         </p>
-        <button className="shadow-xl px-5 py-3 bg-white text-rose-600 font-bold my-10 text-lg md:w-1/2">
+        <button className="shadow-xl px-5 py-3 bg-white text-rose-600 font-bold my-10 text-lg md:w-1/2 hover:bg-rose-600 hover:text-white hover:ring-2 hover:ring-white hover:ring-inset ease-out duration-200">
           FORMATIONS OUVERTES
         </button>
       </div>

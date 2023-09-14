@@ -1,7 +1,7 @@
 export default function FooterNavItem({title}) {
   return (
     <li>
-      <a href="#">{title}</a>
+      <a className="hover:underline hover:underline-offset-4" href="#">{title}</a>
     </li>
   );
 }
