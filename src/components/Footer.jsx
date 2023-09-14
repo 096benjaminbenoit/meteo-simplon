@@ -2,7 +2,7 @@ import FooterNavItem from "./FooterNavItem";
 
 export default function Footer() {
   return (
-    <footer className="bg-rose-600 w-screen text-white flex flex-col py-10 gap-10 absolute bottom-0">
+    <footer className="bg-rose-600 w-screen text-white flex flex-col py-10 gap-10">
       <img
         className="w-36 mx-auto"
         src="src/assets/images/simplon_logo_footer.svg"
