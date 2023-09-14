@@ -2,8 +2,9 @@ import { MapContainer, TileLayer, Popup, Marker } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import data from "./../data/simplon.json";
 import { useState, useEffect } from "react";
+import MapLoading from "./MapLoading";
 
-export default function Map() {
+export default function Map({ setSelectedFactory }) {
   const [center, setCenter] = useState([0, 0]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -16,26 +17,14 @@ export default function Map() {
 
     function error() {
       setIsLoading(false);
-      setCenter([48.866667, 2.333333])
+      setCenter([48.866667, 2.333333]);
     }
 
     navigator.geolocation.getCurrentPosition(success, error);
   }, []);
 
   if (isLoading) {
-    return (
-      <>
-        <div className="flex flex-col justify-center items-center gap-3">
-          <span className="text-center text-rose-700">
-            Chargement de la carte...
-          </span>{" "}
-          <div
-            className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid text-rose-700 border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-            role="status"
-          ></div>
-        </div>
-      </>
-    );
+    return <MapLoading />;
   }
 
   return (
@@ -50,7 +39,15 @@ export default function Map() {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {data.factories.map((factory) => (
-        <Marker key={factory.factoryId} position={[factory.lat, factory.lng]}>
+        <Marker
+          key={factory.factoryId}
+          position={[factory.lat, factory.lng]}
+          eventHandlers={{
+            click: () => {
+              setSelectedFactory(factory);
+            },
+          }}
+        >
           <Popup>
             {factory.factoryName} <br />
             {factory.address}, {factory.postCode} <br />

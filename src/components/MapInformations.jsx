@@ -1,15 +1,84 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
-export default function MapInformations() {
+export default function MapInformations({ selectedFactory }) {
+  const [weather, setWeather] = useState(null);
+  const API_KEY = "92a43162cbfeb1c2f82ce93a1fe11b14";
+
+  useEffect(() => {
+    if (selectedFactory) {
+      axios
+        .get(
+          `https://api.openweathermap.org/data/2.5/weather?lat=${selectedFactory.lat}&lon=${selectedFactory.lng}&units=metric&lang=fr&&appid=${API_KEY}`
+        )
+        .then((response) => {
+          setWeather(response.data);
+        })
+        .catch((error) => {
+          console.log("Erreur lors de la récupération de la météo", error);
+        });
+    }
+  }, [selectedFactory]);
+
+  if (!selectedFactory) {
+    return (
+      <div className="text-xl text-center py-20 px-5">
+        Sélectionnez point sur la carte pour voir les détails
+      </div>
+    );
+  }
+
+  function getWeatherEmoji(weatherMain) {
+    switch (weatherMain) {
+      case "Clear":
+        return "☀️";
+      case "Clouds":
+        return "☁️";
+      case "Rain":
+        return "🌧";
+      case "Snow":
+        return "❄️";
+      case "Thunderstorm":
+        return "⚡";
+      case "Drizzle":
+        return "🌦";
+      case "Mist":
+      case "Fog":
+      case "Haze":
+        return "🌫";
+      default:
+        return "";
+    }
+  }
+
   return (
     <div className="bg-slate-100 p-10">
       <div className="border-t-4 border-rose-600 bg-white h-full">
-        <h2 className="text-center text-xl font-bold py-2">Simplon Narbonne</h2>
+        <h2 className="text-center text-xl font-bold py-2">
+          {selectedFactory.factoryName}
+        </h2>
         <div className="flex justify-center gap-5">
           <FaMapMarkerAlt className="text-rose-600" />
-          <p>Narbonne, 11000 Occitanie, France</p>
+          <p>
+            {selectedFactory.address}, {selectedFactory.postCode}
+          </p>
         </div>
-        <p className="py-10 text-center">INFORMATIONS</p>
+        {weather ? (
+          <div className="flex flex-col justify-center items-center text-center py-10">
+            <span className="text-6xl">
+              {getWeatherEmoji(weather.weather[0].main)}
+            </span>
+            <div>
+              <p className="font-semibold text-lg py-3 capitalize">
+                {weather.weather[0].description}
+              </p>
+              <p className="text-4xl font-bold">{weather.main.temp}°C</p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-center">Chargement de la météo...</p>
+        )}
       </div>
     </div>
   );
